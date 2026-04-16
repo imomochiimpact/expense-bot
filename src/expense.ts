@@ -195,6 +195,7 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
 
     // files.c-lab.works にアップロード
     let imageUrl: string | null = null;
+    let viewUrl: string | null = null;
     if (attachment) {
       try {
         imageUrl = await uploadReceipt(
@@ -203,6 +204,7 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
           attachment.contentType ?? 'application/octet-stream',
           `経費申請 ${appliedAt} by ${applicant}`,
         );
+        viewUrl = `https://files.c-lab.works/${attachment.name}?key=c-lab`;
       } catch (err) {
         console.error('領収書アップロード失敗:', err);
         await interaction.followUp({
@@ -214,7 +216,7 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
 
     // followUp で申請Embedをチャンネルに投稿（全員に見える）
     const expenseMsg = await interaction.followUp({
-      embeds: [buildEmbed(applicant, amount, purpose, imageUrl, appliedAt)],
+      embeds: [buildEmbed(applicant, amount, purpose, viewUrl, appliedAt)],
       components: [buildButtons()],
     });
 
@@ -224,7 +226,7 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
       applicant,
       amount,
       purpose,
-      image_url: imageUrl,
+      image_url: viewUrl,
       applied_at: appliedAt,
     });
 
