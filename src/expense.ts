@@ -220,7 +220,7 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
       components: [buildButtons()],
     });
 
-    insertExpense({
+    await insertExpense({
       message_id: expenseMsg.id,
       channel_id: channel.id,
       applicant,
@@ -252,7 +252,7 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
     }
 
     const messageId = interaction.message.id;
-    const record = getExpenseByMessage(messageId);
+    const record = await getExpenseByMessage(messageId);
 
     if (!record) {
       await interaction.reply({ content: '申請データが見つかりません。', ephemeral: true });
@@ -283,7 +283,7 @@ export async function handleInteraction(interaction: Interaction): Promise<void>
       });
     }
 
-    updateStatus(messageId, newStatus, sheetRow);
+    await updateStatus(messageId, newStatus, sheetRow);
 
     await interaction.update({
       embeds: [

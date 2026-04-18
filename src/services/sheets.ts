@@ -1,3 +1,4 @@
+import path from 'path';
 import { google } from 'googleapis';
 
 interface AppendData {
@@ -11,8 +12,11 @@ interface AppendData {
 }
 
 export async function appendExpense(data: AppendData): Promise<number> {
+  const credentialsJson = process.env.GOOGLE_CREDENTIALS_JSON;
   const auth = new google.auth.GoogleAuth({
-    keyFile: 'credentials.json',
+    ...(credentialsJson
+      ? { credentials: JSON.parse(credentialsJson) }
+      : { keyFile: path.resolve(__dirname, '../../credentials.json') }),
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
 
