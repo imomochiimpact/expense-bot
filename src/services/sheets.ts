@@ -15,7 +15,7 @@ export async function appendExpense(data: AppendData): Promise<number> {
   const credentialsJson = process.env.GOOGLE_CREDENTIALS_JSON;
   const auth = new google.auth.GoogleAuth({
     ...(credentialsJson
-      ? { credentials: JSON.parse(credentialsJson) }
+      ? { credentials: JSON.parse(credentialsJson.trim()) }
       : { keyFile: path.resolve(__dirname, '../../credentials.json') }),
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
